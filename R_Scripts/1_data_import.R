@@ -1,5 +1,10 @@
-#Data Import
+####Data Import
 getwd()
+#Package management
+to.install<-c('here', 'tidyverse', 'readxl', 'janitor')
+new.packages <- to.install[!(to.install %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
 library(here)
 library(tidyverse)
 library(readxl)
