@@ -128,6 +128,6 @@ ontario_enrolment%>%
   group_by(`Academic Year`) %>% 
   mutate(Percent=n/sum(n)*100) %>% 
   filter(Public_Private=="Private") %>% 
-  ggplot(., aes(x=`Academic Year`, y=Percent, group=1))+geom_point()+geom_line()+ylim(c(5,10))+theme_minimal()+labs(title="Share of Ontario students enrolled in private schools, 2014-2020")
+  ggplot(., aes(x=`Academic Year`, y=Percent))+geom_col()+ylim(c(0,10))+theme_minimal()+labs(title="Share of Ontario students enrolled in private schools, 2014-2020")
 ggsave(filename="ontario_private_school_enrolment.png", width=6, height=4)
 
