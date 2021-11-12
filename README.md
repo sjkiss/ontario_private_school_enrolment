@@ -1,3 +1,4 @@
+
 # Ontario Private School Enrolment
 
 This repository contains the individual data files taken from this Ontario Data repository [](https://data.ontario.ca/dataset/private-school-enrolment-by-gender). The contents include:
@@ -13,7 +14,7 @@ This repository contains the individual data files taken from this Ontario Data 
   
 The original data-sets were taken from [here](https://data.ontario.ca/dataset/private-school-enrolment-by-gender) for private schools and [here](https://data.ontario.ca/dataset/school-enrolment-by-gender) for public schools. 
 
-The basic graph of interest is here: 
+The basic graph of interest is ![here](https://sjkiss.github.com/ontario_private_school_enrolment/blob/main/ontario_private_school_enrolment.png) 
 
 
 I'll commit to updating this repository as data becomes available. If anyone spots any concerns, please 
