@@ -115,14 +115,18 @@ enrolment %>%
 public_school_enrolment %>% 
   select(`School Number`, `School Name`, `School Level`, `Public_Private`, `Enrolment`, `Academic Year`)->public_school_enrolment
 
+#bind the public school rows to the private school rows 
 public_school_enrolment %>% 
   bind_rows(., enrolment)->ontario_enrolment
 
+#Write out the file
+write_csv(ontario_enrolment, file=here("data", "ontario_enrolment.csv"))
+#### Draw the Grap[h]
 ontario_enrolment%>%
   group_by(`Public_Private`, `Academic Year`) %>%
   summarize(n=sum(Enrolment, na.rm=T)) %>% 
   group_by(`Academic Year`) %>% 
   mutate(Percent=n/sum(n)*100) %>% 
   filter(Public_Private=="Private") %>% 
-  ggplot(., aes(x=`Academic Year`, y=Percent, group=1))+geom_point()+geom_line()+ylim(c(5,10))+theme_minimal()
+  ggplot(., aes(x=`Academic Year`, y=Percent, group=1))+geom_point()+geom_line()+ylim(c(5,10))+theme_minimal()+labs(title="Share of Ontario students enrolled in private schools, 2014-2020")
 

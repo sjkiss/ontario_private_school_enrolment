@@ -7,4 +7,6 @@ This repository contains the individual data files taken from this Ontario Data 
   - It converts all variable names to title cases
   - Sets cells with values "<10"" to have a value of 5
   - deletes values with "SP" because these are not defined in the data documentation
-  - Recalculates new enrolments
+  - filters out rows in the public school data-set that are totals
+  - Recalculates new enrolments for the private schools from the total male and female enrolments
+  - binds the two data sets together into one and saves that file out. 
