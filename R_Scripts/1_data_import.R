@@ -1,6 +1,5 @@
-####Data Import
-getwd()
-#Package management
+
+####Package management
 to.install<-c('here', 'tidyverse', 'readxl', 'janitor')
 new.packages <- to.install[!(to.install %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
@@ -9,10 +8,11 @@ library(here)
 library(tidyverse)
 library(readxl)
 library(janitor)
+#### Private School Data####
 #List files
-files.list<-list.files(here("Data"))
+files.list<-list.files(here("data/private_schools"), pattern="xlsx")
 #Add the working directory using here() and "data" to each file name. 
-files.list<-map(files.list, function(x) paste(here(), "data", x, sep="/"))
+files.list<-map(files.list, function(x) paste(here(), "data", "private_schools", x, sep="/"))
 #check 
 files.list
 #Use map to loop over each file and read it in 
@@ -40,8 +40,89 @@ enrolment %>%
 #After visual inspection there are some values of SP
 #No data documentation as to what that is, but it seems like these values were stored mostly in the pre-calculated total columns
 #Perhaps we can just recalculate our own totals
+names(enrolment)
 enrolment %>% 
-  #Calculate own totals from constitutent elements
-  mutate(total=sum(`Elementary Male Enrolment`+`Elementary Female Enrolment`+`Secondary Male Enrolment`+`Secondary Female Enrolment`, na.rm=T))->enrolment
+  #Calculate own totals from constitutent elements elementary male enrolment, elementary female enrolment, secondary male enrolment and secondary female enrolment
+rowwise()%>%
+  mutate(`Enrolment`=sum(c_across(cols=5:8), na.rm=T))->enrolment
+
+#Create a new variable called Public_Private to not whether a row comes from private schools or public schools
+#All these come from private schools
+enrolment%>%
+  mutate(`Public_Private`="Private")->enrolment
+enrolment$Public_Private
 #Write out the combined file
-write.csv(enrolment, file=here("data/ontario_private_school_enrolment_total.csv"))
+write.csv(enrolment, file=here("data/private_schools/ontario_private_school_enrolment_total.csv"))
+
+#### Public School Data
+public_school_files<-list.files(here("data/public_schools"), pattern="xlsx")
+#Add the working directory using here() and "data" to each file name. 
+public_school_files<-map(public_school_files, function(x) paste(here(), "data", "public_schools", x, sep="/"))
+#check 
+public_school_files
+
+#Use map to loop over each file and read it in 
+public_school_enrolment<-map(public_school_files, read_excel) 
+#Check names
+public_school_enrolment %>% 
+  map(., names)
+enrolment
+#Collapse the list items into a dataframe creating an id variable called id
+public_school_enrolment%>%
+ bind_rows(., .id="id")%>%
+  #Turn that id variable into an Academic Year variable
+mutate(`Academic Year`=case_when(
+    id==1 ~ "2014-2015",
+    id==2 ~ "2015-2016",
+    id==3 ~ "2016-2017",
+    id==4 ~ "2017-2018",
+    id==5 ~ "2018-2019",
+    id==6 ~ "2019-2020"
+  )
+  )->public_school_enrolment
+names(public_school_enrolment)
+
+#Convert public enrolment numbers to numbers
+public_school_enrolment$Enrolment
+#Some values also have <10. 
+#Set these to be five
+public_school_enrolment %>% 
+  #Using across to do the same function across several columns, in this case columngs 5:10
+  #str_replace_all is handy to replace <10 with 5
+  mutate(Enrolment=str_replace_all(Enrolment, '<10', '5'),
+         Enrolment=str_replace_all(Enrolment, ',', '')) ->public_school_enrolment
+names(public_school_enrolment)
+
+#Exclude Total Rowsw which were discovered at this stage because of forced coercion to NAs and suspiciously large numbers
+public_school_enrolment %>% 
+  filter(!is.na(`School Number`))->public_school_enrolment
+
+public_school_enrolment %>% 
+  filter(., as.numeric(Enrolment)> 2000) 
+
+public_school_enrolment$Enrolment<-as.numeric(public_school_enrolment$Enrolment)
+
+#
+enrolment$Public_Private
+public_school_enrolment%>%
+  mutate(Public_Private="Public")->public_school_enrolment
+
+#### 
+names(enrolment)
+names(public_school_enrolment)
+enrolment %>% 
+  select(`School Number`, `School Name`, `School Level`, `Public_Private`, `Enrolment`, `Academic Year`)->enrolment
+public_school_enrolment %>% 
+  select(`School Number`, `School Name`, `School Level`, `Public_Private`, `Enrolment`, `Academic Year`)->public_school_enrolment
+
+public_school_enrolment %>% 
+  bind_rows(., enrolment)->ontario_enrolment
+
+ontario_enrolment%>%
+  group_by(`Public_Private`, `Academic Year`) %>%
+  summarize(n=sum(Enrolment, na.rm=T)) %>% 
+  group_by(`Academic Year`) %>% 
+  mutate(Percent=n/sum(n)*100) %>% 
+  filter(Public_Private=="Private") %>% 
+  ggplot(., aes(x=`Academic Year`, y=Percent, group=1))+geom_point()+geom_line()+ylim(c(5,10))+theme_minimal()
+
