@@ -17,4 +17,4 @@ The original data-sets were taken from [here](https://data.ontario.ca/dataset/pr
 The basic graph of interest is ![here](https://github.com/sjkiss/ontario_private_school_enrolment/raw/main/ontario_private_school_enrolment.png) 
 
 
-I'll commit to updating this repository as data becomes available. If anyone spots any concerns, please 
+I'll commit to updating this repository as data becomes available. If anyone spots any concerns, please contact me or open a pull request. 
