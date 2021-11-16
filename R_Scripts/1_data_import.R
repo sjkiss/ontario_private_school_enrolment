@@ -10,7 +10,7 @@ library(readxl)
 library(janitor)
 #### Private School Data####
 #List files
-files.list<-list.files(here("data/private_schools"), pattern="xlsx")
+files.list<-list.files(here("data", "private_schools"), pattern="xlsx")
 #Add the working directory using here() and "data" to each file name. 
 files.list<-map(files.list, function(x) paste(here(), "data", "private_schools", x, sep="/"))
 #check 
@@ -46,11 +46,11 @@ enrolment %>%
 rowwise()%>%
   mutate(`Enrolment`=sum(c_across(cols=5:8), na.rm=T))->enrolment
 
-#Create a new variable called Public_Private to not whether a row comes from private schools or public schools
+#Create a new variable called Board to not whether a row comes from private schools or public schools
 #All these come from private schools
 enrolment%>%
-  mutate(`Public_Private`="Private")->enrolment
-enrolment$Public_Private
+  mutate(`Board`="Private")->enrolment
+enrolment$Board
 #Write out the combined file
 write.csv(enrolment, file=here("data/private_schools/ontario_private_school_enrolment_total.csv"))
 
@@ -82,6 +82,7 @@ mutate(`Academic Year`=case_when(
   )->public_school_enrolment
 names(public_school_enrolment)
 
+
 #Convert public enrolment numbers to numbers
 public_school_enrolment$Enrolment
 #Some values also have <10. 
@@ -101,19 +102,23 @@ public_school_enrolment %>%
   filter(., as.numeric(Enrolment)> 2000) 
 
 public_school_enrolment$Enrolment<-as.numeric(public_school_enrolment$Enrolment)
+table(public_school_enrolment$`Board Name`)
+class(public_school_enrolment$`Board Name`)
+?str_detect
+table(str_detect(public_school_enrolment$`Board Name`, "\\bDSB"))
+public_school_enrolment %>% 
+  mutate(Board=case_when(
+str_detect(`School Type`, "Catholic|Protestant")~'Separate',
+str_detect(`School Type`, "Public")~'Public'))->public_school_enrolment
 
-#
-enrolment$Public_Private
-public_school_enrolment%>%
-  mutate(Public_Private="Public")->public_school_enrolment
-
+table(public_school_enrolment$`School Type`)
 #### 
 names(enrolment)
 names(public_school_enrolment)
 enrolment %>% 
-  select(`School Number`, `School Name`, `School Level`, `Public_Private`, `Enrolment`, `Academic Year`)->enrolment
+  select(`School Number`, `School Name`, `School Level`, `Board`, `Enrolment`, `Academic Year`)->enrolment
 public_school_enrolment %>% 
-  select(`School Number`, `School Name`, `School Level`, `Public_Private`, `Enrolment`, `Academic Year`)->public_school_enrolment
+  select(`School Number`, `School Name`, `School Level`, `Board`, `Enrolment`, `Academic Year`)->public_school_enrolment
 
 #bind the public school rows to the private school rows 
 public_school_enrolment %>% 
@@ -123,11 +128,12 @@ public_school_enrolment %>%
 write_csv(ontario_enrolment, file=here("data", "ontario_enrolment.csv"))
 #### Draw the Grap[h]
 ontario_enrolment%>%
-  group_by(`Public_Private`, `Academic Year`) %>%
+  group_by(`Board`, `Academic Year`) %>%
   summarize(n=sum(Enrolment, na.rm=T)) %>% 
   group_by(`Academic Year`) %>% 
   mutate(Percent=n/sum(n)*100) %>% 
-  filter(Public_Private=="Private") %>% 
-  ggplot(., aes(x=`Academic Year`, y=Percent))+geom_col()+ylim(c(0,10))+theme_minimal()+labs(title=str_wrap("Share of Ontario students enrolled in private schools, 2014-2020", 50))
+  View()
+ # filter(Board=="Private") %>% 
+  ggplot(., aes(x=`Academic Year`, y=Percent))+geom_col()+theme_minimal()+labs(title=str_wrap("Share of Ontario students enrolled in private schools, 2014-2020", 50))+facet_grid(~Board)
 ggsave(filename="ontario_private_school_enrolment.png", width=5, height=5)
 
