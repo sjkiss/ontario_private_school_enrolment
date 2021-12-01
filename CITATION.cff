@@ -8,4 +8,5 @@ title: "Ontario Private and Public School Enrollment"
 doi: 10.5281/zenodo.5747743
 date-released: 2021-12-01
 url: "https://github.com/sjkiss/ontario_private_school_enrolment"
-preferred-citation: "misc"
+preferred-citation:
+  type: misc
