@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Kiss"
+  given-names: "Simon"
+  orcid: "https://orcid.org/0000-0003-1837-5428"
+title: "Ontario Private and Public School Enrollment"
+doi: 10.5281/zenodo.5747743
+date-released: 2021-12-01
+url: "https://github.com/sjkiss/ontario_private_school_enrolment"

@@ -1,6 +1,8 @@
 
 # Ontario Private and Public School Enrolment
 
+[![DOI](https://zenodo.org/badge/420125203.svg)](https://zenodo.org/badge/latestdoi/420125203)
+
 The purpose of this repository is to provide a single point of access for data on private and public school enrollment in Ontario. It contains:
 
 1. the original datasets reporting [private](https://data.ontario.ca/dataset/private-school-enrolment-by-gender) school and [public](https://data.ontario.ca/dataset/school-enrolment-by-gender) school enrollment from the Ontario Open Data database.  
@@ -23,3 +25,5 @@ The basic graph of interest is here:
 
 
 I'll commit to updating this repository as data becomes available. If anyone spots any concerns, please contact me or open a pull request. 
+
+
