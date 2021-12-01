@@ -1,5 +1,7 @@
+---
+title: Ontario Private and Public School Enrolment
+---
 
-# Ontario Private and Public School Enrolment
 
 The purpose of this repository is to provide a single point of access for data on private and public school enrollment in Ontario. It contains:
 
