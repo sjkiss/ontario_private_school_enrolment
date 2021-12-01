@@ -17,7 +17,10 @@ To cite, please see the citation file to the right.
   
 
 
-The basic graph of interest is ![here](https://github.com/sjkiss/ontario_private_school_enrolment/raw/main/ontario_private_school_enrolment.png) 
+The basic graph of interest is here:
+
+
+![here](hhttps://github.com/sjkiss/ontario_private_school_enrolment/raw/main/Plots/ontario_private_school_enrolment.png) 
 
 
 I'll commit to updating this repository as data becomes available. If anyone spots any concerns, please contact me or open a pull request. 
