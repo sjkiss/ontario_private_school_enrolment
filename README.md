@@ -13,7 +13,7 @@ The purpose of this repository is to provide a single point of access for data o
   - binds the two data sets together into one and saves that file out.
 3. A combined dataset that shows public and private school enrollment in Ontario. 
 
-To cite, please kindly cite as follows:
+To cite, please see the citation file to the right.
   
 
 

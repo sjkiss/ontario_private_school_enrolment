@@ -1,4 +1,4 @@
-cff-version: 1.2.0
+cff-version: 1.1.0
 message: "If you use this dataset, kindly cite it as below."
 authors:
 - family-names: "Kiss"
@@ -7,7 +7,6 @@ authors:
 title: "Ontario Public, Private and Separate School Enrolment"
 version: 1
 type: dataset
-doi: 10.5281/zenodo.1234
 date-released: 2021-11-16
 url: "https://github.com/sjkiss/ontario_private_school_enrolment"
 preferred-citation: @misc
