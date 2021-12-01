@@ -132,8 +132,20 @@ ontario_enrolment%>%
   summarize(n=sum(Enrolment, na.rm=T)) %>% 
   group_by(`Academic Year`) %>% 
   mutate(Percent=n/sum(n)*100) %>% 
-  View()
- # filter(Board=="Private") %>% 
-  ggplot(., aes(x=`Academic Year`, y=Percent))+geom_col()+theme_minimal()+labs(title=str_wrap("Share of Ontario students enrolled in private schools, 2014-2020", 50))+facet_grid(~Board)
-ggsave(filename="ontario_private_school_enrolment.png", width=5, height=5)
+  filter(Board=="Private") %>% 
+  ggplot(., aes(x=`Academic Year`, y=Percent))+geom_col()+theme_minimal()+labs(title=str_wrap("Share of Ontario students enrolled in private schools, 2014-2020", 50))+facet_grid(~Board)+geom_text(aes(x=`Academic Year`, y=Percent, label=round(Percent, 1)), nudge_y=0.2)
+ggsave(filename=here("Plots", "ontario_private_school_enrolment.png"), width=5, height=5)
+
+ontario_enrolment%>%
+  group_by(`Board`, `Academic Year`) %>%
+  summarize(n=sum(Enrolment, na.rm=T)) %>% 
+  group_by(`Academic Year`) %>% 
+  mutate(Percent=n/sum(n)*100) %>% 
+  # filter(Board=="Private") %>% 
+  ggplot(., aes(x=`Academic Year`, y=Percent))+geom_col()+theme_minimal()+labs(title="Share of Ontario students enrolled in private, public and separate schools, 2014-2020")+facet_grid(~Board)+geom_text(aes(x=`Academic Year`, y=Percent, label=round(Percent, 1)), nudge_y=3)+theme(axis.text.x = element_text(angle=90, hjust=1))
+ggsave(filename=here("Plots", "ontario_separate_public_private_school_enrolment.png"), width=10, height=6)
+
+
+
+
 
